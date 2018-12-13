@@ -1,0 +1,30 @@
+#:kivy 1.0
+
+<MainBoxLayout>:
+    PaintWidget:
+        id: paintWidget
+        lineWidth: round(lineWidthSlider.value, 1)
+
+    InfoBoxLayout:
+        id: infoBox
+        orientation: "vertical"
+        cols: 2
+        canvas.before:
+            Color:
+                rgba: 0.1, 0.1, 0.1, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        ValueBoxLayout:
+            id: lineWidthBox
+            orientation: "horizontal"
+            Slider:
+                id: lineWidthSlider
+                size_hint: (0.8, None)
+                min: 1
+                value: 5
+                max: 10
+            Label:
+                id: lineWidthLabel
+                size_hint: (0.2, None)
+                text: str(round(lineWidthSlider.value, 1))
