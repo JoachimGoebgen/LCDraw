@@ -27,7 +27,7 @@ windowWidth = int(conf.get('base', 'windowWidth'))
 windowHeight = int(conf.get('base', 'windowHeight'))
 reSize_px = int(conf.get('base', 'imgSize_px'))
 
-startTimeStr = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M_") + str(reSize_px) + "x" + str(reSize_px) + "px"
+startTimeStr = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M_") + str(reSize_px) + "x" + str(reSize_px) + "px_uint8"
 
 
 
@@ -67,9 +67,9 @@ class MainBox(BoxLayout):
     for char in labels:
         labelToCountDict[char] = 0
     
-    imgCounter = 0
     imgStorage = []
-    
+    lblStorage = []
+
     def process_image(self):
         img = np.asarray(imageio.imread(temp_fullpath))
         (u_min, u_mid, u_max, v_min, v_mid, v_max, size_half) = self.get_symbol_bounds(img)
@@ -80,9 +80,12 @@ class MainBox(BoxLayout):
         # imageio.imwrite('.img_resized.png', img_resized[:, :])
         img_ubyte = img_as_ubyte(img_resized)
         self.imgStorage.append(img_ubyte)
+        self.lblStorage.append(ord(self.labels[self.labelIndex]))
         self.update_labels(1)
 
     def rollback_image(self):
+        del self.imgStorage[-1]
+        del self.lblStorage[-1]
         self.update_labels(-1)
 
     def update_labels(self, sign):
@@ -106,7 +109,9 @@ class MainBox(BoxLayout):
     
     def write_data(self):
         images = np.array(self.imgStorage, dtype=np.uint8)
+        labels = np.array(self.lblStorage, dtype=np.uint8)
         convert_to_file(os.path.join(data_path, startTimeStr + "_img.idx"), images)
+        convert_to_file(os.path.join(data_path, startTimeStr + "_ascii-lbl.idx"), labels)
 
 
 if __name__ == '__main__':
