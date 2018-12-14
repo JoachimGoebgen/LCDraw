@@ -22,6 +22,11 @@
             text: "reDo"
             font_size: 50
             on_release: root.rollback_image()
+        Button:
+            id: writeButton
+            text: "write data"
+            font_size: 30
+            on_release: root.write_data()
         Label:
             id: labelLabel
             text: root.labels[0]
