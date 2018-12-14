@@ -1,4 +1,4 @@
-import os, imageio, scipy, datetime
+import os, imageio, datetime
 import numpy as np
 from idx2numpy import convert_to_file
 from skimage import img_as_ubyte
@@ -9,26 +9,21 @@ from kivy.uix.widget import Widget
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
-from kivy.uix.slider import Slider
 from kivy.uix.label import Label
 from kivy.graphics import Color, Line, Rectangle
 from kivy.core.window import Window
 
-labelToCountDict = {}
-
 data_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 temp_fullpath = os.path.join(data_path, '.temp.png')
-conf_fullpath = os.path.join(data_path, 'config.ini')
 
+conf_fullpath = os.path.join(data_path, 'config.ini')
 conf = ConfigParser()
 conf.read(conf_fullpath)
-
 windowWidth = int(conf.get('base', 'windowWidth'))
 windowHeight = int(conf.get('base', 'windowHeight'))
-reSize_px = int(conf.get('base', 'imgSize_px'))
+imgSize_px = int(conf.get('base', 'imgSize_px'))
 
-startTimeStr = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M_") + str(reSize_px) + "x" + str(reSize_px) + "px_uint8"
-
+startTimeStr = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M_") + str(imgSize_px) + "x" + str(imgSize_px) + "px_uint8"
 
 
 class LCDrawApp(App):
@@ -36,14 +31,16 @@ class LCDrawApp(App):
         Window.size = (windowWidth, windowHeight)
         return MainBox()
    
+
 class PaintWidget(Widget):
     paintWidgetSize_ratio = float(windowHeight) / windowWidth
+    drawLineWidth_px = int(conf.get('base', 'drawLineWidth_px'))
 
     def on_touch_down(self, touch):
         if self.collide_point(touch.x, touch.y):
             with self.canvas:
                 Color(1, 1, 1, 1)
-                touch.ud['line'] = Line(points=(touch.x, touch.y), width=self.lineWidth)
+                touch.ud['line'] = Line(points=(touch.x, touch.y), width=self.drawLineWidth_px)
 
     def on_touch_move(self, touch):
         if self.collide_point(touch.x, touch.y):
@@ -63,10 +60,6 @@ class DataBox(BoxLayout):
 class MainBox(BoxLayout):
     labelIndex = 0
     labels = conf.get('base', 'labels')
-    global labelToCountDict
-    for char in labels:
-        labelToCountDict[char] = 0
-    
     imgStorage = []
     lblStorage = []
 
@@ -76,7 +69,7 @@ class MainBox(BoxLayout):
         if (u_min >= u_max or v_min >= v_max):
             return
         img_boundingBox = img[v_mid-size_half:v_mid+size_half, u_mid-size_half:u_mid+size_half, 0]
-        img_resized = resize(img_boundingBox, (reSize_px, reSize_px), anti_aliasing=False)
+        img_resized = resize(img_boundingBox, (imgSize_px, imgSize_px), anti_aliasing=False)
         # imageio.imwrite('.img_resized.png', img_resized[:, :])
         img_ubyte = img_as_ubyte(img_resized)
         self.imgStorage.append(img_ubyte)
@@ -111,7 +104,7 @@ class MainBox(BoxLayout):
         images = np.array(self.imgStorage, dtype=np.uint8)
         labels = np.array(self.lblStorage, dtype=np.uint8)
         convert_to_file(os.path.join(data_path, startTimeStr + "_img.idx"), images)
-        convert_to_file(os.path.join(data_path, startTimeStr + "_ascii-lbl.idx"), labels)
+        convert_to_file(os.path.join(data_path, startTimeStr + "_lbl-ascii.idx"), labels)
 
 
 if __name__ == '__main__':

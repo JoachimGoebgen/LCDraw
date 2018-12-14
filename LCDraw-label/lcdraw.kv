@@ -4,7 +4,7 @@
     PaintWidget:
         id: paintWidget
         size_hint: (self.paintWidgetSize_ratio, 1)
-        lineWidth: round(lineWidthSlider.value, 1)
+        lineWidth: round(self.drawLineWidth_px, 1)
 
     DataBox:
         id: dataBox
@@ -31,16 +31,3 @@
             id: labelLabel
             text: root.labels[0]
             font_size: 50
-        BoxLayout:
-            id: lineWidthBox
-            orientation: "horizontal"
-            Slider:
-                id: lineWidthSlider
-                size_hint: (0.85, None)
-                min: 1
-                value: 5
-                max: 10     
-            Label:
-                id: lineWidthLabel
-                size_hint: (0.15, None)
-                text: str(round(lineWidthSlider.value, 1))
