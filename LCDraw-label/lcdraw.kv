@@ -3,10 +3,12 @@
 <MainBox>:
     PaintWidget:
         id: paintWidget
+        size_hint: (self.paintWidgetSize_ratio, 1)
         lineWidth: round(lineWidthSlider.value, 1)
 
     DataBox:
         id: dataBox
+        size_hint: (self.dataBoxSize_ratio, 1)
         orientation: "vertical"
         cols: 2
         canvas.before:
@@ -25,11 +27,11 @@
             pos_hint: 
             Slider:
                 id: lineWidthSlider
-                size_hint: (0.8, None)
+                size_hint: (0.85, None)
                 min: 1
                 value: 5
                 max: 10     
             Label:
                 id: lineWidthLabel
-                size_hint: (0.2, None)
+                size_hint: (0.15, None)
                 text: str(round(lineWidthSlider.value, 1))
