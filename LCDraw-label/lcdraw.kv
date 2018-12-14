@@ -1,12 +1,12 @@
 #:kivy 1.0
 
-<MainBoxLayout>:
+<MainBox>:
     PaintWidget:
         id: paintWidget
         lineWidth: round(lineWidthSlider.value, 1)
 
-    InfoBoxLayout:
-        id: infoBox
+    DataBox:
+        id: dataBox
         orientation: "vertical"
         cols: 2
         canvas.before:
@@ -15,6 +15,10 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
+        Label:
+            id: labelLabel
+            text: dataBox.labels[dataBox.labelIndex]
+            font_size: 50
         BoxLayout:
             id: lineWidthBox
             orientation: "horizontal"
@@ -24,7 +28,7 @@
                 size_hint: (0.8, None)
                 min: 1
                 value: 5
-                max: 10
+                max: 10     
             Label:
                 id: lineWidthLabel
                 size_hint: (0.2, None)
