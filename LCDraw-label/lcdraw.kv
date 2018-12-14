@@ -17,14 +17,18 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
+        Button:
+            id: redoButton
+            text: "reDo"
+            font_size: 50
+            on_release: root.rollback_image()
         Label:
             id: labelLabel
-            text: dataBox.labels[dataBox.labelIndex]
+            text: root.labels[0]
             font_size: 50
         BoxLayout:
             id: lineWidthBox
             orientation: "horizontal"
-            pos_hint: 
             Slider:
                 id: lineWidthSlider
                 size_hint: (0.85, None)
