@@ -103,8 +103,8 @@ class MainBox(BoxLayout):
     def write_data(self):
         images = np.array(self.imgStorage, dtype=np.uint8)
         labels = np.array(self.lblStorage, dtype=np.uint8)
-        convert_to_file(os.path.join(data_path, startTimeStr + "_img.idx"), images)
-        convert_to_file(os.path.join(data_path, startTimeStr + "_lbl-" + labels + ".idx"), labels)
+        convert_to_file(os.path.join(data_path, startTimeStr + "_" + str(len(images)) + "_img.idx"), images)
+        convert_to_file(os.path.join(data_path, startTimeStr + "_" + str(len(images)) + "_lbl-" + self.labels + ".idx"), labels)
 
 
 if __name__ == '__main__':
