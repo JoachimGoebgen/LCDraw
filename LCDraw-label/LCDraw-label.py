@@ -98,7 +98,7 @@ class MainBox(BoxLayout):
                         u_min = u
                     if (u > u_max):
                         u_max = u                
-        return (u_min, (u_max + u_min) / 2, u_max, v_min, (v_max + v_min) / 2, v_max, max(u_max - u_min, v_max - v_min) / 2)
+        return (u_min, int((u_max + u_min) / 2), u_max, v_min, int((v_max + v_min) / 2), v_max, round(max(u_max - u_min, v_max - v_min) / 2))
     
     def write_data(self):
         images = np.array(self.imgStorage, dtype=np.uint8)
