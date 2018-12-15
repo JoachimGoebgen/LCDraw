@@ -19,9 +19,9 @@ temp_fullpath = os.path.join(data_path, '.temp.png')
 conf_fullpath = os.path.join(data_path, 'config.ini')
 conf = ConfigParser()
 conf.read(conf_fullpath)
-windowWidth = int(conf.get('base', 'windowWidth'))
-windowHeight = int(conf.get('base', 'windowHeight'))
-imgSize_px = int(conf.get('base', 'imgSize_px'))
+windowWidth = int(conf.get('label', 'windowWidth'))
+windowHeight = int(conf.get('label', 'windowHeight'))
+imgSize_px = int(conf.get('label', 'imgSize_px'))
 
 startTimeStr = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M_") + str(imgSize_px) + "x" + str(imgSize_px) + "px_uint8"
 
@@ -34,7 +34,7 @@ class LCDrawApp(App):
 
 class PaintWidget(Widget):
     paintWidgetSize_ratio = float(windowHeight) / windowWidth
-    drawLineWidth_px = int(conf.get('base', 'drawLineWidth_px'))
+    drawLineWidth_px = int(conf.get('label', 'drawLineWidth_px'))
 
     def on_touch_down(self, touch):
         if self.collide_point(touch.x, touch.y):
@@ -59,7 +59,7 @@ class DataBox(BoxLayout):
 
 class MainBox(BoxLayout):
     labelIndex = 0
-    labels = conf.get('base', 'labels')
+    labels = conf.get('label', 'labels')
     imgStorage = []
     lblStorage = []
 
@@ -73,7 +73,7 @@ class MainBox(BoxLayout):
         # imageio.imwrite('.img_resized.png', img_resized[:, :])
         img_ubyte = img_as_ubyte(img_resized)
         self.imgStorage.append(img_ubyte)
-        self.lblStorage.append(ord(self.labels[self.labelIndex]))
+        self.lblStorage.append(self.labelIndex)
         self.update_labels(1)
 
     def rollback_image(self):
@@ -104,7 +104,7 @@ class MainBox(BoxLayout):
         images = np.array(self.imgStorage, dtype=np.uint8)
         labels = np.array(self.lblStorage, dtype=np.uint8)
         convert_to_file(os.path.join(data_path, startTimeStr + "_img.idx"), images)
-        convert_to_file(os.path.join(data_path, startTimeStr + "_lbl-ascii.idx"), labels)
+        convert_to_file(os.path.join(data_path, startTimeStr + "_lbl-" + labels + ".idx"), labels)
 
 
 if __name__ == '__main__':
