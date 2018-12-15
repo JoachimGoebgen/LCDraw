@@ -109,3 +109,5 @@ venv.bak/
 # LCDraw-specific stuff
 .temp.png
 *.idx
+*.png
+.vs
